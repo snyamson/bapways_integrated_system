@@ -1,0 +1,94 @@
+
+// COCOA DISTRIBUTION API
+
+GET http://localhost:3000/api/cocoa-distribution
+
+####
+
+POST http://localhost:3000/api/cocoa-distribution
+Content-Type: application/json
+
+{
+"clientName": "Solomon Nyamson",
+"kg_to_company": "4",
+"kg_to_client": "3",
+"total_kg": "7",
+"bags": "1",
+"date_of_sale": "2022-05-07"
+}
+
+####
+
+// OFFICER API
+
+GET http://localhost:3000/api/officers
+
+####
+POST http://localhost:3000/api/officers
+Content-Type: application/json
+
+{
+"name": "Kewsi Agyemang",
+"phone": "0555645345",
+"email": "test@k.com",
+"gender": "Female",
+"location": "Meduma",
+"level_of_educ": "Certificate",
+"date_of_employment": "2022-05-17"
+}
+
+
+####
+PATCH http://localhost:3000/api/officer/1
+Content-Type: application/json
+
+{
+"name": "Kwabena Appiah",
+"gender": "Female"
+}
+
+
+####
+DELETE http://localhost:3000/api/officer/1
+
+
+####
+// CLIENTS API
+
+GET http://localhost:3000/api/clients
+
+####
+
+POST http://localhost:3000/api/clients
+Content-Type: application/json
+
+{
+"name": "Solomon Nyamson",
+"phone": "0555645345",
+"gender": "Male",
+"crop_type": "Maize",
+"farm_size": "200 arce",
+"location": "Meduma",
+"district": "Kware East Municipal",
+"date_of_registration": "2022-05-17",
+"officerId": 1
+}
+
+####
+
+PATCH http://localhost:3000/api/client/1
+Content-Type: application/json
+
+{
+"phone": "05596653",
+"gender": "Male",
+"crop_type": "Vegetables",
+"farm_size": "100 arce"
+}
+
+
+#####
+
+// COCOA DISTRIBUTION API
+
+GET http://localhost:3000/api/cocoa-distribution
