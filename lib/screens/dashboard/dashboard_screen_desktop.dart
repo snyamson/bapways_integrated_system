@@ -21,11 +21,18 @@ class DashboardScreenDesktop extends GetView {
         padding: const EdgeInsets.only(left: 13),
         child: Column(
           children: [
-            Wrap(children: const [
-              SummaryFarmerCardDesktop(),
-              SummaryCocoaDistributionCardDesktop(),
-              SummaryOfficersCardDesktop()
-            ]),
+            Expanded(
+              flex: 3,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: const [
+                  SummaryFarmerCardDesktop(),
+                  SummaryCocoaDistributionCardDesktop(),
+                  SummaryOfficersCardDesktop()
+                ],
+              ),
+            ),
             const SizedBox(height: 15),
             Row(
               children: const [SummaryFarmersByOfficersCardDesktop()],

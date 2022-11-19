@@ -1,14 +1,12 @@
-import 'dart:convert';
-
-import 'package:bapways_integrated_system/models/client.dart';
+import 'package:bapways_integrated_system/controllers/officer_controller.dart';
+import 'package:bapways_integrated_system/db/db_helper.dart';
+import 'package:bapways_integrated_system/schema/schema.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
-
-import '../constants/api_url.dart';
-import '../services/api_service.dart';
+import 'package:realm/realm.dart';
 
 class ClientController extends GetxController {
-  final ApiService _apiService = ApiService();
+  final OfficerController _officerController = Get.find<OfficerController>();
 
   final addClientFormKey = GlobalKey<FormState>();
 
@@ -31,14 +29,14 @@ class ClientController extends GetxController {
   var isLoading = false.obs;
   var isEditing = false.obs;
   var errorMap = <String, dynamic>{"isError": false, "errorMessage": ''}.obs;
-  var clientsList = <Client>[].obs;
+  final _clientsList = <Client>[].obs;
+
+  get clientsList => _clientsList;
 
   // CLIENT TO EDIT
-  late Client clientToEdit;
+  late Client _clientDataToEdit;
 
-  void assignClientToEdit(int id) {
-    clientToEdit = clientsList.firstWhere((client) => client.id == id);
-  }
+  Client get clientDataToEdit => _clientDataToEdit;
 
   // FORM DATA
 
@@ -71,117 +69,105 @@ class ClientController extends GetxController {
     return null;
   }
 
-  //FETCH ALL CLIENTS
-  Future<void> getClientsList() async {
-    isLoading(true);
-    Response response = await _apiService.getData(uri: ApiUrl.getClients);
+  // CLEAR INPUTS FIELDS AND REFRESH DATA
 
-    if (response.statusCode == 200) {
-      clientsList.value = [];
-      var json = jsonDecode(response.bodyString!) as List;
-      List<Client> clients = json.map((o) => Client.fromMap(o)).toList();
-      clientsList.addAll(clients);
-      errorMap["isError"] = false;
-      errorMap["errorMessage"] = '';
-      isLoading(false);
-    } else {
-      //TODO: Work on The Error Display
-      errorMap["isError"] = true;
-      errorMap["errorMessage"] = response.statusText;
-      isLoading(false);
-    }
-
-    update();
+  void _doneAndRefresh() {
+    addClientFormKey.currentState!.reset();
+    genderValue.value = '';
+    cropTypeValue.value = '';
+    registeredBy.value = '';
+    getAllClientData();
   }
 
-  // ADD CLIENT TO THE DATABASE
-  void addClient() async {
-    if (addClientFormKey.currentState!.validate()) {
-      addClientFormKey.currentState!.save();
+  // ASSIGN DATA TO UPDATE
+  void assignClientDataToEdit(String id) {
+    _clientDataToEdit = _clientsList.firstWhere(
+      (data) => data.id.toString() == id,
+    );
+  }
 
-      final Client client = Client(
-        name: name,
-        phone: phone,
-        gender: genderValue.toString(),
-        cropType: cropTypeValue.toString(),
-        farmSize: farmSize,
-        location: location,
-        district: district,
-        dateOfRegistration: dateOfRegistration,
-        officerId: int.parse(registeredBy.value),
-      );
+//FETCH ALL DATA FROM THE DATABASE
 
-      var clientJson = clientToJson(client);
-
-      clientsList.add(client);
-
-      try {
-        final Response response = await _apiService.postData(
-            uri: ApiUrl.postClients, body: clientJson);
-        if (response.statusCode == 200) {
-          //TODO: send a snackbar or toast to the user
-          debugPrint('Successfully Posted to the Database');
-
-          getClientsList();
-
-          addClientFormKey.currentState!.reset();
-          genderValue.value = '';
-          cropTypeValue.value = '';
-          registeredBy.value = '';
-        }
-      } catch (e) {
-        //TODO: send a snackbar or toast to the user
-        debugPrint(e.toString());
+  Future<void> getAllClientData() async {
+    try {
+      List<Client>? query = await DbHelper.getAllClientData();
+      if (query != null) {
+        _clientsList.assignAll(query);
       }
-
-      update();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
-// UPDATE A CLIENT
-  Future<void> updateClient(int id) async {
+//ADD NEW DATA TO THE DATABASE
+  Future<void> addClient() async {
     if (addClientFormKey.currentState!.validate()) {
       addClientFormKey.currentState!.save();
 
-      List<Client> updatedItem =
-          clientsList.where((data) => data.id == id).toList();
-
-      final Client client = Client(
-        name: name,
-        phone: phone,
-        gender: genderValue.toString(),
-        cropType: cropTypeValue.toString(),
-        farmSize: farmSize,
-        location: location,
-        district: district,
-        dateOfRegistration: dateOfRegistration,
-        officerId: int.parse(registeredBy.value),
-      );
-
-      updatedItem[0] = client;
-
-      var clientJson = clientToJson(client);
-
       try {
-        final Response response = await _apiService.updateData(
-            uri: '${ApiUrl.updateClient}/$id', body: clientJson);
-        if (response.statusCode == 200) {
-          //TODO: send a snackbar or toast to the user
-          debugPrint('Successfully Updated the Entry');
+        Officer registeredByOfficer =
+            _officerController.officersList.firstWhere(
+          (officer) => officer.id.toString() == registeredBy.value,
+        );
 
-          getClientsList();
+        Client client = Client(
+          ObjectId(),
+          (_clientsList.length) + 1,
+          name,
+          phone,
+          genderValue.toString(),
+          cropTypeValue.toString(),
+          farmSize,
+          location,
+          district,
+          dateOfRegistration,
+          DateTime.now(),
+          officer: registeredByOfficer,
+        );
 
-          addClientFormKey.currentState!.reset();
-          genderValue.value = '';
-          cropTypeValue.value = '';
-          registeredBy.value = '';
-        }
+        DbHelper.insertClientData(clientData: client);
+        _doneAndRefresh();
       } catch (e) {
-        //TODO: send a snackbar or toast to the user
         debugPrint(e.toString());
       }
+    }
+  }
 
-      update();
+//UPDATE DATA IN THE DATABASE
+  Future<void> updateClientData() async {
+    if (addClientFormKey.currentState!.validate()) {
+      addClientFormKey.currentState!.save();
+
+      try {
+        Client dataToEdit = _clientsList.firstWhere(
+          (data) => data.id.toString() == _clientDataToEdit.id.toString(),
+        );
+
+        Officer registeredByOfficer =
+            _officerController.officersList.firstWhere(
+          (officer) => officer.id.toString() == registeredBy.value,
+        );
+
+        Client client = Client(
+          dataToEdit.id,
+          dataToEdit.clientId,
+          name,
+          phone,
+          genderValue.toString(),
+          cropTypeValue.toString(),
+          farmSize,
+          location,
+          district,
+          dateOfRegistration,
+          dataToEdit.createdAt,
+          officer: registeredByOfficer,
+        );
+
+        DbHelper.updateClientData(clientData: client);
+        _doneAndRefresh();
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -195,7 +181,7 @@ class ClientController extends GetxController {
     farmSizeController = TextEditingController();
     dateOfRegistrationController = TextEditingController();
 
-    getClientsList();
+    getAllClientData();
   }
 
   @override

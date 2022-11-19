@@ -40,7 +40,7 @@ class AddClientDesktop extends GetView<ClientController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.clientToEdit.name,
+                                    text: controller.clientDataToEdit.name,
                                   ),
                                 )
                               : controller.nameController,
@@ -56,7 +56,7 @@ class AddClientDesktop extends GetView<ClientController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.clientToEdit.location,
+                                    text: controller.clientDataToEdit.location,
                                   ),
                                 )
                               : controller.locationController,
@@ -86,7 +86,7 @@ class AddClientDesktop extends GetView<ClientController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.clientToEdit.farmSize,
+                                    text: controller.clientDataToEdit.farmSize,
                                   ),
                                 )
                               : controller.farmSizeController,
@@ -109,7 +109,7 @@ class AddClientDesktop extends GetView<ClientController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.clientToEdit.phone,
+                                    text: controller.clientDataToEdit.phone,
                                   ),
                                 )
                               : controller.phoneController,
@@ -125,7 +125,7 @@ class AddClientDesktop extends GetView<ClientController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.clientToEdit.district,
+                                    text: controller.clientDataToEdit.district,
                                   ),
                                 )
                               : controller.districtController,
@@ -156,7 +156,7 @@ class AddClientDesktop extends GetView<ClientController> {
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
                                       text: controller
-                                          .clientToEdit.dateOfRegistration),
+                                          .clientDataToEdit.dateOfRegistration),
                                 )
                               : controller.dateOfRegistrationController,
                           validator: (value) {
@@ -204,7 +204,7 @@ class AddClientDesktop extends GetView<ClientController> {
                 isEditing: controller.isEditing.value,
                 onPressed: () {
                   if (controller.isEditing.isTrue) {
-                    controller.updateClient(controller.clientToEdit.id!);
+                    controller.updateClientData();
                     controller.onPageChange(0);
                   } else {
                     controller.addClient();

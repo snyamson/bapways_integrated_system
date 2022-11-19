@@ -1,4 +1,4 @@
-import 'package:bapways_integrated_system/models/client.dart';
+import 'package:bapways_integrated_system/schema/schema.dart';
 import 'package:bapways_integrated_system/utils/generate_ids.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -12,7 +12,8 @@ class ClientDataSource extends DataGridSource {
           (e) => DataGridRow(
             cells: [
               DataGridCell<String>(
-                  columnName: 'id', value: GenerateId.assignClientId(e.id!)),
+                  columnName: 'id',
+                  value: GenerateId.assignClientId(e.clientId)),
               DataGridCell<String>(columnName: 'name', value: e.name),
               DataGridCell<String>(columnName: 'phone', value: e.phone),
               DataGridCell<String>(columnName: 'gender', value: e.gender),
@@ -24,7 +25,7 @@ class ClientDataSource extends DataGridSource {
               DataGridCell<String>(columnName: 'crop_type', value: e.cropType),
               DataGridCell<String>(columnName: 'farm_size', value: e.farmSize),
               DataGridCell<String>(
-                  columnName: 'registered_by', value: e.officerName?.name),
+                  columnName: 'registered_by', value: e.officer?.name),
             ],
           ),
         )

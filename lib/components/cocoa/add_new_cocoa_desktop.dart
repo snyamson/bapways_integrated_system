@@ -36,8 +36,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller
-                                        .cocoaDistributionToEdit.clientId,
+                                    text: controller.cocoaDataToEdit.clientId,
                                   ),
                                 )
                               : controller.farmerIdController,
@@ -53,8 +52,8 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller
-                                        .cocoaDistributionToEdit.kgToCompany,
+                                    text:
+                                        controller.cocoaDataToEdit.kgToCompany,
                                   ),
                                 )
                               : controller.kgToCompanyController,
@@ -70,8 +69,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text:
-                                        controller.cocoaDistributionToEdit.bags,
+                                    text: controller.cocoaDataToEdit.bags,
                                   ),
                                 )
                               : controller.totalBagsController,
@@ -94,8 +92,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller
-                                        .cocoaDistributionToEdit.clientName,
+                                    text: controller.cocoaDataToEdit.clientName,
                                   ),
                                 )
                               : controller.clientNameController,
@@ -111,8 +108,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller
-                                        .cocoaDistributionToEdit.kgToClient,
+                                    text: controller.cocoaDataToEdit.kgToClient,
                                   ),
                                 )
                               : controller.kgToClientController,
@@ -128,8 +124,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller
-                                        .cocoaDistributionToEdit.dateOfSale,
+                                    text: controller.cocoaDataToEdit.dateOfSale,
                                   ),
                                 )
                               : controller.dateOfSaleController,
@@ -153,11 +148,13 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                 isEditing: controller.isEditing.value,
                 onPressed: () async {
                   if (controller.isEditing.isTrue) {
-                    await controller.updateCocoaDistributionEntry(
-                        controller.cocoaDistributionToEdit.id!, context);
+                    await controller.updateCocoaData();
+                    // await controller.updateCocoaDistributionEntry(
+                    //     controller.cocoaDistributionToEdit.id!, context);
                     controller.onPageChange(0);
                   } else {
-                    await controller.addCocoaDistributionData(context);
+                    await controller.addCocoaData();
+                    await controller.getAllCocoaData();
                   }
                 },
               )

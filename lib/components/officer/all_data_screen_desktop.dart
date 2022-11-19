@@ -36,7 +36,7 @@ class AllDataScreenDesktop extends GetView<OfficerController> {
             return RenderErrorDesktop(
                 errorText: 'Server Could Not Be Reached',
                 onPressed: () {
-                  controller.getOfficersList();
+                  //  controller.getOfficersList();
                 });
           } else {
             return SfDataGridTheme(
@@ -63,10 +63,13 @@ class AllDataScreenDesktop extends GetView<OfficerController> {
                                   'Phone Number: ${controller.officersList[details.rowColumnIndex.rowIndex - 1].phone}',
                               onEditPressed: () {
                                 controller.startEditing();
-                                controller.assignOfficerToEdit(controller
-                                    .officersList[
-                                        details.rowColumnIndex.rowIndex - 1]
-                                    .id!);
+                                controller.assignOfficerDataToEdit(
+                                  controller
+                                      .officersList[
+                                          details.rowColumnIndex.rowIndex - 1]
+                                      .id
+                                      .toString(),
+                                );
                                 controller.onPageChange(1);
                                 Navigator.pop(context);
                               });

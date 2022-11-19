@@ -1,17 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
+import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/models/cocoa_distribution.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../constants/api_url.dart';
-import '../services/api_service.dart';
+import 'package:realm/realm.dart';
 
 class CocoaController extends GetxController {
-  final ApiService _apiService = ApiService();
-
   final addCocoaDistributionFormKey = GlobalKey<FormState>();
 
   late TextEditingController farmerIdController;
@@ -26,15 +19,12 @@ class CocoaController extends GetxController {
   var isLoading = false.obs;
   var isEditing = false.obs;
   var errorMap = <String, dynamic>{"isError": false, "errorMessage": ''}.obs;
-  var cocoaDistributionList = <CocoaDistribution>[].obs;
+  final _cocoaDistributionList = <CocoaDistribution>[].obs;
+
+  get cocoaDistributionList => _cocoaDistributionList;
 
   // OFFICER TO EDIT
-  late CocoaDistribution cocoaDistributionToEdit;
-
-  void assignCocoaDistributionToEdit(int id) {
-    cocoaDistributionToEdit =
-        cocoaDistributionList.firstWhere((data) => data.id == id);
-  }
+  late CocoaDistribution cocoaDataToEdit;
 
   // FORM DATA
   String farmerId = '';
@@ -66,121 +56,85 @@ class CocoaController extends GetxController {
     isEditing(false);
   }
 
-  // COCOA DISTRIBUTION API CODES
+  // ASSIGN DATA TO UPDATE
+  void assignCocoaDataToEdit(String id) {
+    cocoaDataToEdit = _cocoaDistributionList.firstWhere(
+      (data) => data.id.toString() == id,
+    );
+  }
 
 //FETCH ALL DATA FROM THE DATABASE
-  Future<void> getCocoaDistributionList() async {
-    isLoading(true);
-    Response response =
-        await _apiService.getData(uri: ApiUrl.getCocoaDistribution);
-    if (response.statusCode == 200) {
-      cocoaDistributionList.value = [];
-      var json = jsonDecode(response.bodyString!) as List;
-      List<CocoaDistribution> cocoaDistributionData =
-          json.map((o) => CocoaDistribution.fromMap(o)).toList();
-      cocoaDistributionList.addAll(cocoaDistributionData);
-      errorMap["isError"] = false;
-      errorMap["errorMessage"] = '';
-      isLoading(false);
-    } else {
-      //TODO: Work on The Error Display
-      errorMap["isError"] = true;
-      errorMap["errorMessage"] = response.statusText;
-      isLoading(false);
-    }
 
-    update();
-  }
-
-  // ADD COCOA DISTRIBUTION TO THE DATABASE
-  Future<void> addCocoaDistributionData(BuildContext context) async {
-    if (addCocoaDistributionFormKey.currentState!.validate()) {
-      addCocoaDistributionFormKey.currentState!.save();
-
-      final CocoaDistribution cocoaDistribution = CocoaDistribution(
-          clientId: farmerId,
-          clientName: clientName,
-          kgToCompany: kgToCompany,
-          kgToClient: kgToClient,
-          totalKg: bags,
-          bags: bags,
-          dateOfSale: dateOfSale);
-
-      var cocoaDistributionJson = cocoaDistributionToJson(cocoaDistribution);
-
-      cocoaDistributionList.add(cocoaDistribution);
-
-      try {
-        final Response response = await _apiService.postData(
-            uri: ApiUrl.postCocoaDistribution, body: cocoaDistributionJson);
-
-        switch (response.statusCode) {
-          case 200:
-            getCocoaDistributionList();
-            addCocoaDistributionFormKey.currentState!.reset();
-            AppNotificationDesktop.success(
-                context: context,
-                message: 'Entry was added to the database successfully');
-
-            break;
-          default:
-            AppNotificationDesktop.error(
-                context: context, message: 'Error occurred when adding entry');
-        }
-      } on SocketException {
-        AppNotificationDesktop.error(
-            context: context, message: 'Error occurred when adding entry');
+  Future<void> getAllCocoaData() async {
+    try {
+      List<CocoaDistribution>? query = await DbHelper.getAllCocoaData();
+      if (query != null) {
+        _cocoaDistributionList.assignAll(query);
       }
-
-      update();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
-  // UPDATE A CLIENT
-  Future<void> updateCocoaDistributionEntry(
-      int id, BuildContext context) async {
+//ADD NEW DATA TO THE DATABASE
+  Future<void> addCocoaData() async {
     if (addCocoaDistributionFormKey.currentState!.validate()) {
       addCocoaDistributionFormKey.currentState!.save();
 
-      List<CocoaDistribution> updatedItem =
-          cocoaDistributionList.where((data) => data.id == id).toList();
-
-      final CocoaDistribution cocoaDistribution = CocoaDistribution(
-          clientId: farmerId,
-          clientName: clientName,
-          kgToCompany: kgToCompany,
-          kgToClient: kgToClient,
-          totalKg: bags,
-          bags: bags,
-          dateOfSale: dateOfSale);
-
-      updatedItem[0] = cocoaDistribution;
-
-      var cocoaDistributionJson = cocoaDistributionToJson(cocoaDistribution);
-
       try {
-        final Response response = await _apiService.updateData(
-            uri: '${ApiUrl.updateCocoaDistribution}/$id',
-            body: cocoaDistributionJson);
-        switch (response.statusCode) {
-          case 200:
-            getCocoaDistributionList();
-            addCocoaDistributionFormKey.currentState!.reset();
-            AppNotificationDesktop.success(
-                context: context, message: 'Entry was updated successfully');
-            break;
-          default:
-            AppNotificationDesktop.error(
-                context: context,
-                message: 'Error occurred when updating entry');
-        }
-      } on SocketException catch (e) {
+        CocoaDistribution cocoaData = CocoaDistribution(
+          ObjectId(),
+          farmerId,
+          clientName,
+          kgToCompany,
+          kgToClient,
+          bags,
+          bags,
+          dateOfSale,
+          DateTime.now(),
+        );
+
+        DbHelper.insertCocoaData(cocoaData: cocoaData);
+      } catch (e) {
         debugPrint(e.toString());
-        AppNotificationDesktop.error(
-            context: context, message: 'Error occurred when updating entry');
       }
+    }
+  }
 
-      update();
+//UPDATE DATA IN THE DATABASE
+  Future<void> updateCocoaData() async {
+    if (addCocoaDistributionFormKey.currentState!.validate()) {
+      addCocoaDistributionFormKey.currentState!.save();
+
+      try {
+        CocoaDistribution dataToEdit = _cocoaDistributionList.firstWhere(
+          (data) => data.id.toString() == cocoaDataToEdit.id.toString(),
+        );
+        CocoaDistribution cocoaData = CocoaDistribution(
+          dataToEdit.id,
+          farmerId,
+          clientName,
+          kgToCompany,
+          kgToClient,
+          bags,
+          bags,
+          dateOfSale,
+          dataToEdit.createdAt,
+        );
+
+        DbHelper.updateCocoaData(cocoaData: cocoaData);
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+    }
+  }
+
+// DELETE ALL DATA
+  Future<void> deleteAllCocoaData() async {
+    try {
+      await DbHelper.deleteAll();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -193,8 +147,7 @@ class CocoaController extends GetxController {
     kgToClientController = TextEditingController();
     totalBagsController = TextEditingController();
     dateOfSaleController = TextEditingController();
-
-    getCocoaDistributionList();
+    getAllCocoaData();
   }
 
   @override

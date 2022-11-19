@@ -1,14 +1,12 @@
-import 'dart:convert';
-
-import 'package:bapways_integrated_system/constants/api_url.dart';
-import 'package:bapways_integrated_system/models/officer.dart';
-import 'package:bapways_integrated_system/services/api_service.dart';
+import 'package:bapways_integrated_system/db/db_helper.dart';
+import 'package:bapways_integrated_system/schema/schema.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:realm/realm.dart';
 
 class OfficerController extends GetxController with StateMixin<List> {
-  final ApiService _apiService = ApiService();
+//  final ApiService _apiService = ApiService();
 
   final addOfficerFormKey = GlobalKey<FormState>();
 
@@ -31,14 +29,14 @@ class OfficerController extends GetxController with StateMixin<List> {
   var isLoading = false.obs;
   var isEditing = false.obs;
   var errorMap = <String, dynamic>{"isError": false, "errorMessage": ''}.obs;
-  var officersList = <Officer>[].obs;
+  final _officersList = <Officer>[].obs;
+
+  RxList<Officer> get officersList => _officersList;
 
   // OFFICER TO EDIT
-  late Officer officerToEdit;
+  late Officer _officerDataToEdit;
 
-  void assignOfficerToEdit(int id) {
-    officerToEdit = officersList.firstWhere((officer) => officer.id == id);
-  }
+  Officer get officerDataToEdit => _officerDataToEdit;
 
 // FORM DATA
   String dateOfEmployment = '';
@@ -78,109 +76,90 @@ class OfficerController extends GetxController with StateMixin<List> {
     isEditing(false);
   }
 
-// OFFICERS API CODES
+  // CLEAR INPUTS FIELDS AND REFRESH DATA
 
-//FETCH ALL OFFICERS FROM THE DATABASE
-  Future<void> getOfficersList() async {
-    isLoading(true);
-    Response response = await _apiService.getData(uri: ApiUrl.getOfficers);
-
-    if (response.statusCode == 200) {
-      officersList.value = [];
-      var json = jsonDecode(response.bodyString!) as List;
-      List<Officer> officers = json.map((o) => Officer.fromJson(o)).toList();
-      officersList.addAll(officers);
-      errorMap["isError"] = false;
-      errorMap["errorMessage"] = '';
-      isLoading(false);
-    } else {
-      errorMap["isError"] = true;
-      errorMap["errorMessage"] = response.statusText;
-      isLoading(false);
-    }
-
-    update();
+  void _doneAndRefresh() {
+    addOfficerFormKey.currentState!.reset();
+    genderValue.value = '';
+    eduCertValue.value = '';
+    getAllOfficerData();
   }
 
-  // FORM SUBMISSION AND POSTING TO API
-  void addOfficer() async {
-    if (addOfficerFormKey.currentState!.validate()) {
-      addOfficerFormKey.currentState!.save();
+  // ASSIGN DATA TO UPDATE
+  void assignOfficerDataToEdit(String id) {
+    _officerDataToEdit = _officersList.firstWhere(
+      (data) => data.id.toString() == id,
+    );
+  }
 
-      final Officer officer = Officer(
-          name: name,
-          phone: phone,
-          email: email,
-          gender: genderValue.toString(),
-          location: location,
-          levelOfEduc: eduCertValue.toString(),
-          dateOfEmployment: dateOfEmployment);
+  //FETCH ALL DATA FROM THE DATABASE
 
-      var officerJson = officerToJson(officer);
+  Future<void> getAllOfficerData() async {
+    try {
+      List<Officer>? query = await DbHelper.getAllOfficerData();
 
-      officersList.add(officer);
-
-      try {
-        final Response response = await _apiService.postData(
-            uri: ApiUrl.postOfficer, body: officerJson);
-        if (response.statusCode == 200) {
-          //TODO: send a snackbar or toast to the user
-          debugPrint('Successfully Posted to the Database');
-
-          getOfficersList();
-
-          addOfficerFormKey.currentState!.reset();
-          genderValue.value = '';
-          eduCertValue.value = '';
-        }
-      } catch (e) {
-        //TODO: send a snackbar or toast to the user
-        debugPrint(e.toString());
+      if (query != null) {
+        _officersList.assignAll(query);
       }
-
-      update();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
-  Future<void> updateOfficer(int id) async {
+//ADD NEW DATA TO THE DATABASE
+  Future<void> addOfficer() async {
     if (addOfficerFormKey.currentState!.validate()) {
       addOfficerFormKey.currentState!.save();
 
-      List<Officer> updatedItem =
-          officersList.where((data) => data.id == id).toList();
-
-      final Officer officer = Officer(
-          name: name,
-          phone: phone,
-          email: email,
-          gender: genderValue.toString(),
-          location: location,
-          levelOfEduc: eduCertValue.toString(),
-          dateOfEmployment: dateOfEmployment);
-
-      updatedItem[0] = officer;
-
-      var officerJson = officerToJson(officer);
-
       try {
-        final Response response = await _apiService.updateData(
-            uri: '${ApiUrl.updateOfficer}/$id', body: officerJson);
-        if (response.statusCode == 200) {
-          //TODO: send a snackbar or toast to the user
-          debugPrint('Successfully Updated the Entry');
+        Officer officer = Officer(
+          ObjectId(),
+          (_officersList.length) + 1,
+          name,
+          phone,
+          email,
+          genderValue.toString(),
+          location,
+          eduCertValue.toString(),
+          dateOfEmployment,
+          DateTime.now(),
+        );
 
-          getOfficersList();
-
-          addOfficerFormKey.currentState!.reset();
-          genderValue.value = '';
-          eduCertValue.value = '';
-        }
+        DbHelper.insertOfficerData(officerData: officer);
+        _doneAndRefresh();
       } catch (e) {
-        //TODO: send a snackbar or toast to the user
         debugPrint(e.toString());
       }
+    }
+  }
 
-      update();
+//UPDATE DATA IN THE DATABASE
+  Future<void> updateOfficerData() async {
+    if (addOfficerFormKey.currentState!.validate()) {
+      addOfficerFormKey.currentState!.save();
+
+      try {
+        Officer dataToEdit = _officersList.firstWhere(
+          (data) => data.id.toString() == _officerDataToEdit.id.toString(),
+        );
+        Officer officer = Officer(
+          dataToEdit.id,
+          dataToEdit.officerId,
+          name,
+          phone,
+          email,
+          genderValue.toString(),
+          location,
+          eduCertValue.toString(),
+          dateOfEmployment,
+          dataToEdit.createdAt,
+        );
+
+        DbHelper.updateOfficerData(officerData: officer);
+        _doneAndRefresh();
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -193,7 +172,7 @@ class OfficerController extends GetxController with StateMixin<List> {
     locationController = TextEditingController();
     dateOfEmploymentController = TextEditingController();
 
-    getOfficersList();
+    getAllOfficerData();
   }
 
   @override

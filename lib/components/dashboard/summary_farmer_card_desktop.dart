@@ -12,6 +12,7 @@ class SummaryFarmerCardDesktop extends StatelessWidget {
         backgroundColor: Colors.white,
         child: SizedBox(
           width: 280,
+          height: 200,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

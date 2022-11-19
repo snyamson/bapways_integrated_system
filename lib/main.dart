@@ -1,4 +1,5 @@
 import 'package:bapways_integrated_system/bindings/all_bindings.dart';
+import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/screens/auth/auth_screen_mobile.dart';
 import 'package:bapways_integrated_system/screens/home/home_screen_desktop.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -10,6 +11,8 @@ import 'package:bapways_integrated_system/utils/dependencies.dart ' as dep;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await DbHelper.initDb();
 
   if (GetPlatform.isDesktop) {
     const initialSize = Size(1024, 600);

@@ -1,7 +1,6 @@
 import 'package:bapways_integrated_system/controllers/home_controller.dart';
 import 'package:bapways_integrated_system/screens/client/client_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/cocoa/cocoa_screen_desktop.dart';
-import 'package:bapways_integrated_system/screens/dashboard/dashboard_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/officer/officer_screen_desktop.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -62,10 +61,6 @@ class HomeScreenDesktop extends GetView<HomeController> {
                     )),
                     PaneItemSeparator(),
                     PaneItem(
-                      icon: const Icon(Ionicons.grid_outline),
-                      title: const Text('DASHBOARD'),
-                    ),
-                    PaneItem(
                       icon: const Icon(Ionicons.people_outline),
                       title: const Text('CLIENT'),
                     ),
@@ -82,7 +77,6 @@ class HomeScreenDesktop extends GetView<HomeController> {
                 content: NavigationBody(
                   index: controller.index.value,
                   children: const [
-                    DashboardScreenDesktop(),
                     ClientScreenDesktop(),
                     OfficerScreenDesktop(),
                     CocoaScreenDesktop()

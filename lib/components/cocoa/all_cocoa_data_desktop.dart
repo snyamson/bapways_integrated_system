@@ -34,7 +34,7 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
             return RenderErrorDesktop(
                 errorText: 'Server cannot be reached',
                 onPressed: () {
-                  controller.getCocoaDistributionList();
+                  controller.getAllCocoaData();
                 });
           } else {
             return SfDataGridTheme(
@@ -60,12 +60,13 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
                                     'Farmer Id: ${controller.cocoaDistributionList[details.rowColumnIndex.rowIndex - 1].clientId}',
                                 onEditPressed: () {
                                   controller.startEditing();
-                                  controller.assignCocoaDistributionToEdit(
-                                      controller
-                                          .cocoaDistributionList[
-                                              details.rowColumnIndex.rowIndex -
-                                                  1]
-                                          .id!);
+                                  controller.assignCocoaDataToEdit(
+                                    controller
+                                        .cocoaDistributionList[
+                                            details.rowColumnIndex.rowIndex - 1]
+                                        .id
+                                        .toString(),
+                                  );
                                   controller.onPageChange(1);
                                   Navigator.pop(context);
                                 });

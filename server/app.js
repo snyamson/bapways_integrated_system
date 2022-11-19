@@ -17,6 +17,7 @@ app.use(require("./routes/user"));
 app.use(require("./routes/client"));
 app.use(require("./routes/cocoa"));
 app.use(require("./routes/officer"));
+app.use(require("./routes/dashboard"));
 
 app.use((req, res, next) => {
   next(createError.NotFound());

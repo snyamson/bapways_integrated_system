@@ -37,7 +37,8 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                               controller: controller.isEditing.isTrue
                                   ? TextEditingController.fromValue(
                                       TextEditingValue(
-                                          text: controller.officerToEdit.name),
+                                          text: controller
+                                              .officerDataToEdit.name),
                                     )
                                   : controller.nameController,
                               validator: (value) {
@@ -52,7 +53,7 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                      text: controller.officerToEdit.email),
+                                      text: controller.officerDataToEdit.email),
                                 )
                               : controller.emailController,
                           validator: (value) {
@@ -87,7 +88,7 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                      text: controller.officerToEdit.phone),
+                                      text: controller.officerDataToEdit.phone),
                                 )
                               : controller.phoneController,
                           validator: (value) {
@@ -102,7 +103,8 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                      text: controller.officerToEdit.location),
+                                      text: controller
+                                          .officerDataToEdit.location),
                                 )
                               : controller.locationController,
                           validator: (value) {
@@ -136,7 +138,8 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                 controller: controller.isEditing.isTrue
                     ? TextEditingController.fromValue(
                         TextEditingValue(
-                            text: controller.officerToEdit.dateOfEmployment),
+                            text:
+                                controller.officerDataToEdit.dateOfEmployment),
                       )
                     : controller.dateOfEmploymentController,
                 validator: (value) {
@@ -152,12 +155,13 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                       ? 'Save Changes'
                       : 'Submit Form',
                   isEditing: controller.isEditing.value,
-                  onPressed: () {
+                  onPressed: () async {
                     if (controller.isEditing.isTrue) {
-                      controller.updateOfficer(controller.officerToEdit.id!);
+                      controller.updateOfficerData();
                       controller.onPageChange(0);
                     } else {
-                      controller.addOfficer();
+                      await controller.addOfficer();
+                      await controller.getAllOfficerData();
                     }
                   })
             ],

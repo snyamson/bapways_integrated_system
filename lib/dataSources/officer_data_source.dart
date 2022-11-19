@@ -1,4 +1,4 @@
-import 'package:bapways_integrated_system/models/officer.dart';
+import 'package:bapways_integrated_system/schema/schema.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -16,7 +16,8 @@ class OfficerDataSource extends DataGridSource {
   OfficerDataSource({required List<Officer> officerData}) {
     _officerData = officerData
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<String>(columnName: 'id', value: formatId(e.id!)),
+              DataGridCell<String>(
+                  columnName: 'id', value: formatId(e.officerId)),
               DataGridCell<String>(columnName: 'name', value: e.name),
               DataGridCell<String>(columnName: 'phone', value: e.phone),
               DataGridCell<String>(columnName: 'email', value: e.email),

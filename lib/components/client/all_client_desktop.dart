@@ -35,7 +35,7 @@ class AllClientDesktop extends GetView<ClientController> {
             return RenderErrorDesktop(
                 errorText: '',
                 onPressed: () {
-                  controller.getClientsList();
+                  //  controller.getClientsList();
                 });
           } else {
             return SfDataGridTheme(
@@ -60,10 +60,13 @@ class AllClientDesktop extends GetView<ClientController> {
                                   'Phone Number: ${controller.clientsList[details.rowColumnIndex.rowIndex - 1].phone}',
                               onEditPressed: () {
                                 controller.startEditing();
-                                controller.assignClientToEdit(controller
-                                    .clientsList[
-                                        details.rowColumnIndex.rowIndex - 1]
-                                    .id!);
+                                controller.assignClientDataToEdit(
+                                  controller
+                                      .clientsList[
+                                          details.rowColumnIndex.rowIndex - 1]
+                                      .id
+                                      .toString(),
+                                );
                                 controller.onPageChange(1);
                                 Navigator.pop(context);
                               });
