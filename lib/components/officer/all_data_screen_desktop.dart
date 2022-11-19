@@ -1,6 +1,5 @@
 import 'package:bapways_integrated_system/components/common/on_row_tap.dart';
 import 'package:bapways_integrated_system/components/common/render_empty_data.dart';
-import 'package:bapways_integrated_system/components/common/render_error_desktop.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -32,12 +31,6 @@ class AllDataScreenDesktop extends GetView<OfficerController> {
           } else if (!controller.errorMap['isError'] &&
               controller.officersList.isEmpty) {
             return const RenderEmptyData();
-          } else if (controller.errorMap['isError']) {
-            return RenderErrorDesktop(
-                errorText: 'Server Could Not Be Reached',
-                onPressed: () {
-                  //  controller.getOfficersList();
-                });
           } else {
             return SfDataGridTheme(
               data: SfDataGridThemeData(

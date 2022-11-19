@@ -1,5 +1,4 @@
 import 'package:bapways_integrated_system/components/common/render_empty_data.dart';
-import 'package:bapways_integrated_system/components/common/render_error_desktop.dart';
 import 'package:bapways_integrated_system/controllers/cocoa_controller.dart';
 import 'package:bapways_integrated_system/dataSources/cocoa_data_source.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -30,12 +29,6 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
           } else if (!controller.errorMap['isError'] &&
               controller.cocoaDistributionList.isEmpty) {
             return const RenderEmptyData();
-          } else if (controller.errorMap['isError']) {
-            return RenderErrorDesktop(
-                errorText: 'Server cannot be reached',
-                onPressed: () {
-                  controller.getAllCocoaData();
-                });
           } else {
             return SfDataGridTheme(
                 data: SfDataGridThemeData(

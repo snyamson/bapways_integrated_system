@@ -56,6 +56,11 @@ class CocoaController extends GetxController {
     isEditing(false);
   }
 
+  void _doneAndRefresh() {
+    addCocoaDistributionFormKey.currentState!.reset();
+    getAllCocoaData();
+  }
+
   // ASSIGN DATA TO UPDATE
   void assignCocoaDataToEdit(String id) {
     cocoaDataToEdit = _cocoaDistributionList.firstWhere(
@@ -95,6 +100,7 @@ class CocoaController extends GetxController {
         );
 
         DbHelper.insertCocoaData(cocoaData: cocoaData);
+        _doneAndRefresh();
       } catch (e) {
         debugPrint(e.toString());
       }
@@ -123,6 +129,7 @@ class CocoaController extends GetxController {
         );
 
         DbHelper.updateCocoaData(cocoaData: cocoaData);
+        _doneAndRefresh();
       } catch (e) {
         debugPrint(e.toString());
       }
