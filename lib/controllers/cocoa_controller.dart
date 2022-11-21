@@ -94,7 +94,6 @@ class CocoaController extends GetxController {
           kgToCompany,
           kgToClient,
           bags,
-          bags,
           dateOfSale,
           DateTime.now(),
         );
@@ -122,7 +121,6 @@ class CocoaController extends GetxController {
           clientName,
           kgToCompany,
           kgToClient,
-          bags,
           bags,
           dateOfSale,
           dataToEdit.createdAt,

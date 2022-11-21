@@ -1,4 +1,5 @@
 import 'package:bapways_integrated_system/models/cocoa_distribution.dart';
+import 'package:bapways_integrated_system/models/user.dart' as app_user;
 import 'package:bapways_integrated_system/schema/schema.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:realm/realm.dart';
@@ -11,11 +12,15 @@ class DbHelper {
       return;
     }
     try {
-      Configuration configuration = Configuration.local([
-        CocoaDistribution.schema,
-        Officer.schema,
-        Client.schema,
-      ]);
+      Configuration configuration = Configuration.local(
+        [
+          CocoaDistribution.schema,
+          Officer.schema,
+          Client.schema,
+          app_user.User.schema,
+        ],
+        schemaVersion: 1,
+      );
       debugPrint('initializing db');
       db = Realm(configuration);
     } catch (e) {
@@ -78,5 +83,23 @@ class DbHelper {
 
   static Future<void> deleteAllClientData() async {
     return db?.write(() => db?.deleteAll<Client>());
+  }
+
+// USER HELPERS
+  static Future<void> insertUserData({required app_user.User userData}) async {
+    print('successfully saved data');
+    return db?.write(() => db?.add<app_user.User>(userData));
+  }
+
+// GET USER
+  static RealmResults<app_user.User>? getUserData(
+      {required String username, required String password}) {
+    return db
+        ?.all<app_user.User>()
+        .query('username == "$username" AND password == "$password"');
+  }
+
+  static Future<List<app_user.User>?> getAllUser() async {
+    return db?.all<app_user.User>().toList();
   }
 }

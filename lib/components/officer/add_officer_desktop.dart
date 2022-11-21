@@ -14,13 +14,14 @@ class AddOfficerDesktop extends GetView<OfficerController> {
     return ScaffoldPage.withPadding(
       padding: const EdgeInsets.only(top: 30),
       header: PageHeader(
-          title: Obx(
-        () => Text(
-          controller.isEditing.value ? 'Editing Mode' : 'Add Officer',
-          style: const TextStyle(fontWeight: FontWeight.w100),
+        title: Obx(
+          () => Text(
+            controller.isEditing.value ? 'Editing Mode' : 'Add Officer',
+            style: const TextStyle(fontWeight: FontWeight.w100),
+          ),
         ),
-      )),
-      content: Padding(
+      ),
+      content: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 30, right: 30),
         child: Form(
           key: controller.addOfficerFormKey,
@@ -32,22 +33,24 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                   Expanded(
                     child: Column(
                       children: [
-                        Obx(() => DesktopFormField(
-                              header: 'Name',
-                              controller: controller.isEditing.isTrue
-                                  ? TextEditingController.fromValue(
-                                      TextEditingValue(
-                                          text: controller
-                                              .officerDataToEdit.name),
-                                    )
-                                  : controller.nameController,
-                              validator: (value) {
-                                return controller.validate(value!, 'Name');
-                              },
-                              onSaved: (value) {
-                                controller.name = value!;
-                              },
-                            )),
+                        Obx(
+                          () => DesktopFormField(
+                            header: 'Name',
+                            controller: controller.isEditing.isTrue
+                                ? TextEditingController.fromValue(
+                                    TextEditingValue(
+                                        text:
+                                            controller.officerDataToEdit.name),
+                                  )
+                                : controller.nameController,
+                            validator: (value) {
+                              return controller.validate(value!, 'Name');
+                            },
+                            onSaved: (value) {
+                              controller.name = value!;
+                            },
+                          ),
+                        ),
                         DesktopFormField(
                           header: 'Email',
                           controller: controller.isEditing.isTrue

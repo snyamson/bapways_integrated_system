@@ -1,4 +1,6 @@
+import 'package:bapways_integrated_system/controllers/auth_controller.dart';
 import 'package:bapways_integrated_system/controllers/home_controller.dart';
+import 'package:bapways_integrated_system/screens/auth/auth_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/client/client_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/cocoa/cocoa_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/officer/officer_screen_desktop.dart';
@@ -10,7 +12,8 @@ import 'package:ionicons/ionicons.dart';
 import '../../components/common/window_buttons.dart';
 
 class HomeScreenDesktop extends GetView<HomeController> {
-  const HomeScreenDesktop({Key? key}) : super(key: key);
+  HomeScreenDesktop({Key? key}) : super(key: key);
+  final AuthController auth = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +49,25 @@ class HomeScreenDesktop extends GetView<HomeController> {
                             Text('Log Out')
                           ],
                         ),
-                        onTap: () {})
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            FluentPageRoute(
+                              builder: (context) => const AuthScreenDesktop(),
+                            ),
+                            (route) => false,
+                          );
+                        })
                   ],
                   items: [
                     PaneItemHeader(
                         header: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text('Name    : Solomon Nyamson'),
-                        Text('Email     : info.snyamson@gmail.com'),
-                        Text('Position : Amin'),
-                        Text('Role       : User'),
+                      children: [
+                        Text('Name    : ${auth.currentUser.fullName}'),
+                        Text('Email     : ${auth.currentUser.email}'),
+                        Text('Position : ${auth.currentUser.position}'),
+                        Text('Role       : ${auth.currentUser.role}'),
                       ],
                     )),
                     PaneItemSeparator(),
@@ -76,10 +87,10 @@ class HomeScreenDesktop extends GetView<HomeController> {
                 ),
                 content: NavigationBody(
                   index: controller.index.value,
-                  children: const [
-                    ClientScreenDesktop(),
+                  children: [
+                    const ClientScreenDesktop(),
                     OfficerScreenDesktop(),
-                    CocoaScreenDesktop()
+                    const CocoaScreenDesktop()
                   ],
                 ),
               ),

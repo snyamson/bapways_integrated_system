@@ -1,12 +1,14 @@
 import 'package:bapways_integrated_system/components/officer/add_officer_desktop.dart';
 import 'package:bapways_integrated_system/components/officer/generate_access.dart';
+import 'package:bapways_integrated_system/controllers/auth_controller.dart';
 import 'package:bapways_integrated_system/controllers/officer_controller.dart';
 import 'package:bapways_integrated_system/components/officer/all_data_screen_desktop.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 
 class OfficerScreenDesktop extends GetView<OfficerController> {
-  const OfficerScreenDesktop({Key? key}) : super(key: key);
+  OfficerScreenDesktop({Key? key}) : super(key: key);
+  final AuthController auth = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class OfficerScreenDesktop extends GetView<OfficerController> {
                 text: Text('Generate Access'),
                 closeIcon: FluentIcons.tab,
                 icon: Icon(FluentIcons.generate),
-              )
+              ),
             ],
             bodies: const [
               AllDataScreenDesktop(),

@@ -1,3 +1,4 @@
+import 'package:bapways_integrated_system/controllers/auth_controller.dart';
 import 'package:bapways_integrated_system/controllers/cocoa_controller.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +9,7 @@ import '../controllers/officer_controller.dart';
 
 void init() async {
   // Initialize Controllers
+  Get.lazyPut(() => AuthController());
   Get.lazyPut(() => CocoaController());
   Get.lazyPut(() => HomeController());
   Get.lazyPut(() => OfficerController());

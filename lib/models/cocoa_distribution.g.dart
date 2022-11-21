@@ -15,7 +15,6 @@ class CocoaDistribution extends _CocoaDistribution
     String kgToCompany,
     String kgToClient,
     String totalKg,
-    String bags,
     String dateOfSale,
     DateTime createdAt,
   ) {
@@ -25,7 +24,6 @@ class CocoaDistribution extends _CocoaDistribution
     RealmObject.set(this, 'kgToCompany', kgToCompany);
     RealmObject.set(this, 'kgToClient', kgToClient);
     RealmObject.set(this, 'totalKg', totalKg);
-    RealmObject.set(this, 'bags', bags);
     RealmObject.set(this, 'dateOfSale', dateOfSale);
     RealmObject.set(this, 'createdAt', createdAt);
   }
@@ -66,11 +64,6 @@ class CocoaDistribution extends _CocoaDistribution
   set totalKg(String value) => RealmObject.set(this, 'totalKg', value);
 
   @override
-  String get bags => RealmObject.get<String>(this, 'bags') as String;
-  @override
-  set bags(String value) => RealmObject.set(this, 'bags', value);
-
-  @override
   String get dateOfSale =>
       RealmObject.get<String>(this, 'dateOfSale') as String;
   @override
@@ -101,7 +94,6 @@ class CocoaDistribution extends _CocoaDistribution
       SchemaProperty('kgToCompany', RealmPropertyType.string),
       SchemaProperty('kgToClient', RealmPropertyType.string),
       SchemaProperty('totalKg', RealmPropertyType.string),
-      SchemaProperty('bags', RealmPropertyType.string),
       SchemaProperty('dateOfSale', RealmPropertyType.string),
       SchemaProperty('createdAt', RealmPropertyType.timestamp),
     ]);

@@ -14,7 +14,6 @@ class AllDataScreenDesktop extends GetView<OfficerController> {
   @override
   Widget build(BuildContext context) {
     controller.doneEditing();
-    // controller.fetchOfficers();
 
     return ScaffoldPage(
       header: const PageHeader(

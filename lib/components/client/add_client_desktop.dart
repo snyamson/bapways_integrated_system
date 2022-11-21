@@ -23,7 +23,7 @@ class AddClientDesktop extends GetView<ClientController> {
           style: const TextStyle(fontWeight: FontWeight.w100),
         ),
       )),
-      content: Padding(
+      content: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 30, right: 30),
         child: Form(
           key: controller.addClientFormKey,

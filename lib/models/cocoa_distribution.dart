@@ -13,13 +13,12 @@ class _CocoaDistribution {
   late String kgToCompany;
   late String kgToClient;
   late String totalKg;
-  late String bags;
   late String dateOfSale;
   late DateTime createdAt;
 
   @override
   String toString() {
-    return '{"id": $id, "clientId": $clientId, "clientName": $clientName, "kgToCompany": $kgToCompany, "kgToClient": $kgToClient, "totalKg": $totalKg, "bags": $bags, "dateOfSale": $dateOfSale, "createdAt": $createdAt}';
+    return '{"id": $id, "clientId": $clientId, "clientName": $clientName, "kgToCompany": $kgToCompany, "kgToClient": $kgToClient, "totalKg": $totalKg, "dateOfSale": $dateOfSale, "createdAt": $createdAt}';
   }
 }
 

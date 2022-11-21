@@ -13,13 +13,14 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
     return ScaffoldPage.withPadding(
       padding: const EdgeInsets.only(top: 30),
       header: PageHeader(
-          title: Obx(
-        () => Text(
-          controller.isEditing.value ? 'Editing Mode' : 'Add New Entry',
-          style: const TextStyle(fontWeight: FontWeight.w100),
+        title: Obx(
+          () => Text(
+            controller.isEditing.value ? 'Editing Mode' : 'Add New Entry',
+            style: const TextStyle(fontWeight: FontWeight.w100),
+          ),
         ),
-      )),
-      content: Padding(
+      ),
+      content: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 30, right: 30),
         child: Form(
           key: controller.addCocoaDistributionFormKey,
@@ -69,7 +70,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.cocoaDataToEdit.bags,
+                                    text: controller.cocoaDataToEdit.totalKg,
                                   ),
                                 )
                               : controller.totalBagsController,
@@ -149,15 +150,13 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                 onPressed: () async {
                   if (controller.isEditing.isTrue) {
                     await controller.updateCocoaData();
-                    // await controller.updateCocoaDistributionEntry(
-                    //     controller.cocoaDistributionToEdit.id!, context);
                     controller.onPageChange(0);
                   } else {
                     await controller.addCocoaData();
                     await controller.getAllCocoaData();
                   }
                 },
-              )
+              ),
             ],
           ),
         ),
