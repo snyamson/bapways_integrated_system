@@ -163,7 +163,7 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                       controller.updateOfficerData();
                       controller.onPageChange(0);
                     } else {
-                      await controller.addOfficer();
+                      await controller.addOfficer(context);
                       await controller.getAllOfficerData();
                     }
                   })

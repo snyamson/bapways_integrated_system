@@ -66,7 +66,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                           },
                         ),
                         DesktopFormField(
-                          header: 'Total Bags',
+                          header: 'Total Kg',
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
@@ -75,7 +75,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                                 )
                               : controller.totalBagsController,
                           validator: (value) {
-                            return controller.validate(value!, 'Total Bags');
+                            return controller.validate(value!, 'Total Kg');
                           },
                           onSaved: (value) {
                             controller.bags = value!;
@@ -152,7 +152,7 @@ class AddNewCocoaDesktop extends GetView<CocoaController> {
                     await controller.updateCocoaData();
                     controller.onPageChange(0);
                   } else {
-                    await controller.addCocoaData();
+                    await controller.addCocoaData(context);
                     await controller.getAllCocoaData();
                   }
                 },

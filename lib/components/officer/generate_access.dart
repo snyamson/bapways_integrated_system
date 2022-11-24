@@ -68,6 +68,7 @@ class GenerateAccess extends GetView<AuthController> {
                         DesktopFormField(
                           header: 'Password',
                           controller: controller.passwordController,
+                          isPasswordField: true,
                           validator: (value) {
                             return controller.validate(value!, 'Password');
                           },
@@ -79,7 +80,7 @@ class GenerateAccess extends GetView<AuthController> {
                           header: 'Email',
                           controller: controller.emailController,
                           validator: (value) {
-                            return controller.validate(value!, 'Email');
+                            return controller.validateEmail(value!, 'Email');
                           },
                           onSaved: (value) {
                             controller.email = value!;
@@ -105,7 +106,7 @@ class GenerateAccess extends GetView<AuthController> {
                 isEditing: false,
                 label: 'Generate Access',
                 onPressed: () async {
-                  controller.generateAccess();
+                  controller.generateAccess(context);
                 },
               ),
             ],

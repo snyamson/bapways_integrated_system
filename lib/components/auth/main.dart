@@ -1,6 +1,4 @@
-import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/controllers/auth_controller.dart';
-import 'package:bapways_integrated_system/screens/home/home_screen_desktop.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
@@ -35,6 +33,7 @@ class Main extends GetView<AuthController> {
                 child: Center(
                   child: Form(
                     key: controller.authScreenFormKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -54,6 +53,7 @@ class Main extends GetView<AuthController> {
                         TextFormBox(
                           header: 'Password',
                           controller: controller.authPasswordController,
+                          obscureText: true,
                           validator: (value) {
                             return controller.validate(value!, 'Password');
                           },
@@ -72,21 +72,7 @@ class Main extends GetView<AuthController> {
                           ),
                           child: const Text('Log In'),
                           onPressed: () async {
-                            await controller.getCurrentUser();
-                            if (controller.isUserFound.isFalse &&
-                                controller.isAuthSubmitted.isTrue) {
-                              AppNotificationDesktop.error(
-                                  context: context,
-                                  message: 'Username or Password Incorrect');
-                            } else {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                FluentPageRoute(
-                                  builder: (context) => HomeScreenDesktop(),
-                                ),
-                                (route) => false,
-                              );
-                            }
+                            await controller.getCurrentUser(context);
                           },
                         ),
                       ],

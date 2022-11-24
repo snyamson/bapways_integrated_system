@@ -1,3 +1,4 @@
+import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/schema/schema.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -107,7 +108,7 @@ class OfficerController extends GetxController with StateMixin<List> {
   }
 
 //ADD NEW DATA TO THE DATABASE
-  Future<void> addOfficer() async {
+  Future<void> addOfficer(BuildContext context) async {
     if (addOfficerFormKey.currentState!.validate()) {
       addOfficerFormKey.currentState!.save();
 
@@ -126,6 +127,8 @@ class OfficerController extends GetxController with StateMixin<List> {
         );
 
         DbHelper.insertOfficerData(officerData: officer);
+        AppNotificationDesktop.success(
+            context: context, message: '$name created successfully');
         _doneAndRefresh();
       } catch (e) {
         debugPrint(e.toString());

@@ -1,5 +1,8 @@
+import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/db/db_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:bapways_integrated_system/screens/auth/auth_screen_desktop.dart';
+import 'package:bapways_integrated_system/screens/home/home_screen_desktop.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:realm/realm.dart';
 import 'package:bapways_integrated_system/models/user.dart' as app_user;
@@ -20,14 +23,15 @@ class AuthController extends GetxController {
   // OBSERVABLES
   final RxBool _isUserFound = false.obs;
   final RxBool _isAuthSubmitted = false.obs;
+  final _currentUser = <app_user.User>[];
 
   RxBool get isUserFound => _isUserFound;
   RxBool get isAuthSubmitted => _isAuthSubmitted;
 
 // CURRENT USER
-  late app_user.User _currentUser;
+  // late app_user.User _currentUser;
 
-  app_user.User get currentUser => _currentUser;
+  app_user.User get currentUser => _currentUser.first;
 
   // FORM DATA
   String authUsername = '';
@@ -47,8 +51,17 @@ class AuthController extends GetxController {
     return null;
   }
 
+  String? validateEmail(String value, String header) {
+    if (value.trim().isEmpty) {
+      return '$header is required';
+    } else if (!GetUtils.isEmail(value)) {
+      return '$header is not valid';
+    }
+    return null;
+  }
+
   // GENERATE ACCESS
-  Future<void> generateAccess() async {
+  Future<void> generateAccess(BuildContext context) async {
     if (authFormKey.currentState!.validate()) {
       authFormKey.currentState!.save();
 
@@ -65,6 +78,10 @@ class AuthController extends GetxController {
         );
 
         await DbHelper.insertUserData(userData: user);
+        AppNotificationDesktop.success(
+          context: context,
+          message: '$username granted access successfully',
+        );
         authFormKey.currentState!.reset();
       } catch (e) {
         debugPrint(e.toString());
@@ -72,7 +89,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> getCurrentUser() async {
+  Future<void> getCurrentUser(BuildContext context) async {
     if (authScreenFormKey.currentState!.validate()) {
       authScreenFormKey.currentState!.save();
 
@@ -85,9 +102,14 @@ class AuthController extends GetxController {
         if (query != null) {
           if (query.isEmpty) {
             _isUserFound.value = false;
+            AppNotificationDesktop.error(
+              context: context,
+              message: 'Username or Password Incorrect',
+            );
           } else {
-            _currentUser = query.toList()[0];
+            _currentUser.assignAll(query);
             _isUserFound.value = true;
+            navigate(context);
           }
         }
         authScreenFormKey.currentState!.reset();
@@ -95,6 +117,29 @@ class AuthController extends GetxController {
         debugPrint(e.toString());
       }
     }
+  }
+
+  Future<void> signOut(BuildContext context) async {
+    Navigator.pushAndRemoveUntil(
+      context,
+      FluentPageRoute(
+        builder: (context) => const AuthScreenDesktop(),
+      ),
+      (route) => false,
+    );
+    _isAuthSubmitted.value = false;
+    _isUserFound.value = false;
+    _currentUser.clear();
+  }
+
+  void navigate(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      FluentPageRoute(
+        builder: (context) => HomeScreenDesktop(),
+      ),
+      (route) => false,
+    );
   }
 
   @override

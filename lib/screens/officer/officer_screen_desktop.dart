@@ -19,27 +19,28 @@ class OfficerScreenDesktop extends GetView<OfficerController> {
             onChanged: (index) {
               controller.onPageChange(index);
             },
-            tabs: const [
-              Tab(
+            tabs: [
+              const Tab(
                 text: Text('All Officers'),
                 closeIcon: FluentIcons.tab,
                 icon: Icon(FluentIcons.list),
               ),
-              Tab(
+              const Tab(
                 text: Text('Add Officer'),
                 closeIcon: FluentIcons.tab,
                 icon: Icon(FluentIcons.add),
               ),
-              Tab(
-                text: Text('Generate Access'),
-                closeIcon: FluentIcons.tab,
-                icon: Icon(FluentIcons.generate),
-              ),
+              if (auth.currentUser.role == 'Author')
+                const Tab(
+                  text: Text('Generate Access'),
+                  closeIcon: FluentIcons.tab,
+                  icon: Icon(FluentIcons.generate),
+                ),
             ],
-            bodies: const [
-              AllDataScreenDesktop(),
-              AddOfficerDesktop(),
-              GenerateAccess(),
+            bodies: [
+              const AllDataScreenDesktop(),
+              if (auth.currentUser.role == 'Author') const AddOfficerDesktop(),
+              const GenerateAccess(),
             ]),
       ),
     );

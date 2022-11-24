@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Bapways Integrated System"
-#define MyAppVersion "1.0.1"
+#define MyAppVersion "1.0.2"
 #define MyAppPublisher "TechLeeds Company Ltd"
 #define MyAppURL "https://www.techleeds.com/"
 #define MyAppExeName "Bapways Integrated System.exe"
@@ -23,7 +23,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=C:\Users\TECHLEEDS\Desktop\DEV\DESKTOP\bapways_integrated_system\installers
-OutputBaseFilename=bapways_integrated_system_v1.0.1
+OutputBaseFilename=bapways_integrated_system_v1.0.2
 SetupIconFile=C:\Users\TECHLEEDS\Desktop\DEV\DESKTOP\bapways_integrated_system\assets\logo.ico
 Compression=lzma
 SolidCompression=yes

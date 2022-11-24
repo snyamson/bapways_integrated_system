@@ -1,3 +1,4 @@
+import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/models/cocoa_distribution.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,7 @@ class CocoaController extends GetxController {
   }
 
 //ADD NEW DATA TO THE DATABASE
-  Future<void> addCocoaData() async {
+  Future<void> addCocoaData(BuildContext context) async {
     if (addCocoaDistributionFormKey.currentState!.validate()) {
       addCocoaDistributionFormKey.currentState!.save();
 
@@ -99,6 +100,10 @@ class CocoaController extends GetxController {
         );
 
         DbHelper.insertCocoaData(cocoaData: cocoaData);
+        AppNotificationDesktop.success(
+          context: context,
+          message: '$clientName created successfully',
+        );
         _doneAndRefresh();
       } catch (e) {
         debugPrint(e.toString());

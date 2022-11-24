@@ -1,6 +1,5 @@
 import 'package:bapways_integrated_system/controllers/auth_controller.dart';
 import 'package:bapways_integrated_system/controllers/home_controller.dart';
-import 'package:bapways_integrated_system/screens/auth/auth_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/client/client_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/cocoa/cocoa_screen_desktop.dart';
 import 'package:bapways_integrated_system/screens/officer/officer_screen_desktop.dart';
@@ -49,14 +48,8 @@ class HomeScreenDesktop extends GetView<HomeController> {
                             Text('Log Out')
                           ],
                         ),
-                        onTap: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            FluentPageRoute(
-                              builder: (context) => const AuthScreenDesktop(),
-                            ),
-                            (route) => false,
-                          );
+                        onTap: () async {
+                          await auth.signOut(context);
                         })
                   ],
                   items: [

@@ -2,6 +2,7 @@ import 'package:bapways_integrated_system/models/cocoa_distribution.dart';
 import 'package:bapways_integrated_system/models/user.dart' as app_user;
 import 'package:bapways_integrated_system/schema/schema.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';
 
 class DbHelper {
@@ -23,6 +24,7 @@ class DbHelper {
       );
       debugPrint('initializing db');
       db = Realm(configuration);
+      insertInitialUser();
     } catch (e) {
       debugPrint('Printing error from init: ${e.toString()}');
     }
@@ -87,7 +89,21 @@ class DbHelper {
 
 // USER HELPERS
   static Future<void> insertUserData({required app_user.User userData}) async {
-    print('successfully saved data');
+    return db?.write(() => db?.add<app_user.User>(userData));
+  }
+
+// INSERT INITIAL DATA INTO THE DATABASE
+  static Future<void> insertInitialUser() async {
+    app_user.User userData = app_user.User(
+      ObjectId(),
+      'admin',
+      'admin',
+      'TechLeeds',
+      'dev.techleeds.com',
+      'Developer',
+      'Author',
+      DateTime.now(),
+    );
     return db?.write(() => db?.add<app_user.User>(userData));
   }
 
@@ -97,9 +113,5 @@ class DbHelper {
     return db
         ?.all<app_user.User>()
         .query('username == "$username" AND password == "$password"');
-  }
-
-  static Future<List<app_user.User>?> getAllUser() async {
-    return db?.all<app_user.User>().toList();
   }
 }
