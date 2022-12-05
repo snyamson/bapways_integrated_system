@@ -10,4 +10,12 @@ class GenerateId {
       return 'BAS-GF/$id';
     }
   }
+
+  static String assignOfficerId(int id) {
+    if (id < 10) {
+      return 'BAS-GS/00$id';
+    } else {
+      return 'BAS-GS/0$id';
+    }
+  }
 }

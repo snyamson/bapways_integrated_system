@@ -20,7 +20,7 @@ class DbHelper {
           Client.schema,
           app_user.User.schema,
         ],
-        schemaVersion: 1,
+        schemaVersion: 2,
       );
       debugPrint('initializing db');
       db = Realm(configuration);

@@ -30,8 +30,8 @@ class CocoaScreenDesktop extends GetView<CocoaController> {
                 icon: Icon(FluentIcons.add),
               ),
             ],
-            bodies: const [
-              AllCocoaDataDesktop(),
+            bodies: [
+              const AllCocoaDataDesktop(),
               AddNewCocoaDesktop()
             ]),
       ),

@@ -16,8 +16,7 @@ class OfficerDataSource extends DataGridSource {
   OfficerDataSource({required List<Officer> officerData}) {
     _officerData = officerData
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<String>(
-                  columnName: 'id', value: formatId(e.officerId)),
+              DataGridCell<String>(columnName: 'id', value: e.officerId),
               DataGridCell<String>(columnName: 'name', value: e.name),
               DataGridCell<String>(columnName: 'phone', value: e.phone),
               DataGridCell<String>(columnName: 'email', value: e.email),

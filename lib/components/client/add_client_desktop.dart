@@ -1,9 +1,12 @@
+import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/components/common/desktop_app_button.dart';
 import 'package:bapways_integrated_system/components/common/desktop_form_field.dart';
 import 'package:bapways_integrated_system/controllers/client_controller.dart';
 import 'package:bapways_integrated_system/controllers/officer_controller.dart';
+import 'package:bapways_integrated_system/utils/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../officer/value_picker.dart';
 
@@ -150,22 +153,29 @@ class AddClientDesktop extends GetView<ClientController> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        DesktopFormField(
-                          header: 'Date of Registration',
-                          controller: controller.isEditing.isTrue
-                              ? TextEditingController.fromValue(
-                                  TextEditingValue(
-                                      text: controller
-                                          .clientDataToEdit.dateOfRegistration),
-                                )
-                              : controller.dateOfRegistrationController,
-                          validator: (value) {
-                            return controller.validate(
-                                value!, 'Date of Registration');
-                          },
-                          onSaved: (value) {
-                            controller.dateOfRegistration = value!;
-                          },
+                        Obx(
+                          () => DesktopFormField(
+                            header: 'Date of Registration',
+                            hintText: DateFormat.yMMMEd()
+                                .format(controller.selectedDate.value)
+                                .toString(),
+                            widget: IconButton(
+                              icon: const Icon(FluentIcons.calendar),
+                              onPressed: () async {
+                                DateTime? pickerDate =
+                                    await Helpers.getDate(context);
+
+                                if (pickerDate != null) {
+                                  controller.selectedDate.value = pickerDate;
+                                } else {
+                                  AppNotificationDesktop.error(
+                                    context: context,
+                                    message: 'No date was selected',
+                                  );
+                                }
+                              },
+                            ),
+                          ),
                         ),
                       ],
                     ),

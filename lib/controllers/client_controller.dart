@@ -1,8 +1,10 @@
 import 'package:bapways_integrated_system/controllers/officer_controller.dart';
 import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/schema/schema.dart';
+import 'package:bapways_integrated_system/utils/generate_ids.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:realm/realm.dart';
 
 class ClientController extends GetxController {
@@ -15,7 +17,6 @@ class ClientController extends GetxController {
   late TextEditingController locationController;
   late TextEditingController districtController;
   late TextEditingController farmSizeController;
-  late TextEditingController dateOfRegistrationController;
 
   // LIST VALUES
   final cropTypes = ['Cocoa', 'Maize', 'Rice', 'Vegetables'];
@@ -28,10 +29,11 @@ class ClientController extends GetxController {
   var index = 0.obs;
   var isLoading = false.obs;
   var isEditing = false.obs;
+  Rx<DateTime> selectedDate = DateTime.now().obs;
   var errorMap = <String, dynamic>{"isError": false, "errorMessage": ''}.obs;
   final _clientsList = <Client>[].obs;
 
-  get clientsList => _clientsList;
+  List<Client> get clientsList => _clientsList;
 
   // CLIENT TO EDIT
   late Client _clientDataToEdit;
@@ -45,7 +47,6 @@ class ClientController extends GetxController {
   String location = '';
   String district = '';
   String farmSize = '';
-  String dateOfRegistration = '';
 
   // TAB MANAGEMENT
   void onPageChange(int newIndex) {
@@ -112,7 +113,7 @@ class ClientController extends GetxController {
 
         Client client = Client(
           ObjectId(),
-          (_clientsList.length) + 1,
+          GenerateId.assignClientId((_clientsList.length) + 1),
           name,
           phone,
           genderValue.toString(),
@@ -120,7 +121,7 @@ class ClientController extends GetxController {
           farmSize,
           location,
           district,
-          dateOfRegistration,
+          DateFormat.yMMMEd().format(selectedDate.value).toString(),
           DateTime.now(),
           officer: registeredByOfficer,
         );
@@ -158,7 +159,7 @@ class ClientController extends GetxController {
           farmSize,
           location,
           district,
-          dateOfRegistration,
+          DateFormat.yMMMEd().format(selectedDate.value).toString(),
           dataToEdit.createdAt,
           officer: registeredByOfficer,
         );
@@ -179,7 +180,6 @@ class ClientController extends GetxController {
     locationController = TextEditingController();
     districtController = TextEditingController();
     farmSizeController = TextEditingController();
-    dateOfRegistrationController = TextEditingController();
 
     getAllClientData();
   }
@@ -196,6 +196,5 @@ class ClientController extends GetxController {
     locationController.dispose();
     districtController.dispose();
     farmSizeController.dispose();
-    dateOfRegistrationController.dispose();
   }
 }

@@ -1,9 +1,11 @@
 import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/schema/schema.dart';
+import 'package:bapways_integrated_system/utils/generate_ids.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:realm/realm.dart';
 
 class OfficerController extends GetxController with StateMixin<List> {
@@ -15,7 +17,6 @@ class OfficerController extends GetxController with StateMixin<List> {
   late TextEditingController phoneController;
   late TextEditingController emailController;
   late TextEditingController locationController;
-  late TextEditingController dateOfEmploymentController;
 
 // LIST VALUES
   final values = ['Blue', 'Green', 'Red'];
@@ -29,6 +30,7 @@ class OfficerController extends GetxController with StateMixin<List> {
   var index = 0.obs;
   var isLoading = false.obs;
   var isEditing = false.obs;
+  Rx<DateTime> selectedDate = DateTime.now().obs;
   var errorMap = <String, dynamic>{"isError": false, "errorMessage": ''}.obs;
   final _officersList = <Officer>[].obs;
 
@@ -40,7 +42,6 @@ class OfficerController extends GetxController with StateMixin<List> {
   Officer get officerDataToEdit => _officerDataToEdit;
 
 // FORM DATA
-  String dateOfEmployment = '';
   String name = '';
   String phone = '';
   String email = '';
@@ -115,14 +116,14 @@ class OfficerController extends GetxController with StateMixin<List> {
       try {
         Officer officer = Officer(
           ObjectId(),
-          (_officersList.length) + 1,
+          GenerateId.assignOfficerId((_officersList.length) + 1),
           name,
           phone,
           email,
           genderValue.toString(),
           location,
           eduCertValue.toString(),
-          dateOfEmployment,
+          DateFormat.yMMMEd().format(selectedDate.value).toString(),
           DateTime.now(),
         );
 
@@ -154,7 +155,7 @@ class OfficerController extends GetxController with StateMixin<List> {
           genderValue.toString(),
           location,
           eduCertValue.toString(),
-          dateOfEmployment,
+          DateFormat.yMMMEd().format(selectedDate.value).toString(),
           dataToEdit.createdAt,
         );
 
@@ -173,7 +174,6 @@ class OfficerController extends GetxController with StateMixin<List> {
     phoneController = TextEditingController();
     emailController = TextEditingController();
     locationController = TextEditingController();
-    dateOfEmploymentController = TextEditingController();
 
     getAllOfficerData();
   }
@@ -189,6 +189,5 @@ class OfficerController extends GetxController with StateMixin<List> {
     phoneController.dispose();
     emailController.dispose();
     locationController.dispose();
-    dateOfEmploymentController.dispose();
   }
 }

@@ -9,7 +9,7 @@ part of 'schema.dart';
 class Officer extends _Officer with RealmEntity, RealmObject {
   Officer(
     ObjectId id,
-    int officerId,
+    String officerId,
     String name,
     String phone,
     String email,
@@ -39,9 +39,9 @@ class Officer extends _Officer with RealmEntity, RealmObject {
   set id(ObjectId value) => RealmObject.set(this, 'id', value);
 
   @override
-  int get officerId => RealmObject.get<int>(this, 'officerId') as int;
+  String get officerId => RealmObject.get<String>(this, 'officerId') as String;
   @override
-  set officerId(int value) => RealmObject.set(this, 'officerId', value);
+  set officerId(String value) => RealmObject.set(this, 'officerId', value);
 
   @override
   String get name => RealmObject.get<String>(this, 'name') as String;
@@ -100,7 +100,7 @@ class Officer extends _Officer with RealmEntity, RealmObject {
     RealmObject.registerFactory(Officer._);
     return const SchemaObject(Officer, 'Officer', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
-      SchemaProperty('officerId', RealmPropertyType.int),
+      SchemaProperty('officerId', RealmPropertyType.string),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('phone', RealmPropertyType.string),
       SchemaProperty('email', RealmPropertyType.string),
@@ -116,7 +116,7 @@ class Officer extends _Officer with RealmEntity, RealmObject {
 class Client extends _Client with RealmEntity, RealmObject {
   Client(
     ObjectId id,
-    int clientId,
+    String clientId,
     String name,
     String phone,
     String gender,
@@ -150,9 +150,9 @@ class Client extends _Client with RealmEntity, RealmObject {
   set id(ObjectId value) => RealmObject.set(this, 'id', value);
 
   @override
-  int get clientId => RealmObject.get<int>(this, 'clientId') as int;
+  String get clientId => RealmObject.get<String>(this, 'clientId') as String;
   @override
-  set clientId(int value) => RealmObject.set(this, 'clientId', value);
+  set clientId(String value) => RealmObject.set(this, 'clientId', value);
 
   @override
   String get name => RealmObject.get<String>(this, 'name') as String;
@@ -221,7 +221,7 @@ class Client extends _Client with RealmEntity, RealmObject {
     RealmObject.registerFactory(Client._);
     return const SchemaObject(Client, 'Client', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
-      SchemaProperty('clientId', RealmPropertyType.int),
+      SchemaProperty('clientId', RealmPropertyType.string),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('phone', RealmPropertyType.string),
       SchemaProperty('gender', RealmPropertyType.string),

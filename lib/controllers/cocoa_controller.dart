@@ -1,39 +1,48 @@
 import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
+import 'package:bapways_integrated_system/controllers/client_controller.dart';
 import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/models/cocoa_distribution.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:realm/realm.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class CocoaController extends GetxController {
   final addCocoaDistributionFormKey = GlobalKey<FormState>();
+  final GlobalKey<SfDataGridState> cocoaDataKey = GlobalKey<SfDataGridState>();
+  final ClientController clientController = Get.find<ClientController>();
 
   late TextEditingController farmerIdController;
   late TextEditingController clientNameController;
   late TextEditingController kgToCompanyController;
   late TextEditingController kgToClientController;
-  late TextEditingController totalBagsController;
   late TextEditingController dateOfSaleController;
 
   // OBSERVABLES
   var index = 0.obs;
   var isLoading = false.obs;
   var isEditing = false.obs;
+
+  Rx<DateTime> selectedDate = DateTime.now().obs;
+
   var errorMap = <String, dynamic>{"isError": false, "errorMessage": ''}.obs;
   final _cocoaDistributionList = <CocoaDistribution>[].obs;
 
-  get cocoaDistributionList => _cocoaDistributionList;
+  List<CocoaDistribution> get cocoaDistributionList => _cocoaDistributionList;
 
   // OFFICER TO EDIT
   late CocoaDistribution cocoaDataToEdit;
+
+  //late Client selectedClient;
 
   // FORM DATA
   String farmerId = '';
   String clientName = '';
   String kgToCompany = '';
   String kgToClient = '';
-  String bags = '';
   String dateOfSale = '';
+  var selectedClientId = ''.obs;
 
   // FORM VALIDATION
   String? validate(String value, String header) {
@@ -59,6 +68,7 @@ class CocoaController extends GetxController {
 
   void _doneAndRefresh() {
     addCocoaDistributionFormKey.currentState!.reset();
+    selectedClientId.value = '';
     getAllCocoaData();
   }
 
@@ -90,12 +100,11 @@ class CocoaController extends GetxController {
       try {
         CocoaDistribution cocoaData = CocoaDistribution(
           ObjectId(),
-          farmerId,
+          selectedClientId.toString(),
           clientName,
           kgToCompany,
           kgToClient,
-          bags,
-          dateOfSale,
+          DateFormat.yMMMEd().format(selectedDate.value).toString(),
           DateTime.now(),
         );
 
@@ -122,12 +131,11 @@ class CocoaController extends GetxController {
         );
         CocoaDistribution cocoaData = CocoaDistribution(
           dataToEdit.id,
-          farmerId,
+          selectedClientId.toString(),
           clientName,
           kgToCompany,
           kgToClient,
-          bags,
-          dateOfSale,
+          DateFormat.yMMMEd().format(selectedDate.value).toString(),
           dataToEdit.createdAt,
         );
 
@@ -155,7 +163,6 @@ class CocoaController extends GetxController {
     clientNameController = TextEditingController();
     kgToCompanyController = TextEditingController();
     kgToClientController = TextEditingController();
-    totalBagsController = TextEditingController();
     dateOfSaleController = TextEditingController();
     getAllCocoaData();
   }

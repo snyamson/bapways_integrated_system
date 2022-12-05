@@ -1,3 +1,4 @@
+import 'package:bapways_integrated_system/components/common/export_data_modal.dart';
 import 'package:bapways_integrated_system/components/common/render_empty_data.dart';
 import 'package:bapways_integrated_system/controllers/cocoa_controller.dart';
 import 'package:bapways_integrated_system/dataSources/cocoa_data_source.dart';
@@ -15,10 +16,27 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
   Widget build(BuildContext context) {
     controller.doneEditing();
     return ScaffoldPage(
-      header: const PageHeader(
-        title: Text(
+      header: PageHeader(
+        title: const Text(
           'All Cocoa Distributions',
           style: TextStyle(fontWeight: FontWeight.w100),
+        ),
+        commandBar: SizedBox(
+          width: Get.width / 8,
+          child: CommandBar(
+            primaryItems: [
+              CommandBarButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const ExportDataModal(),
+                  );
+                },
+                icon: const Icon(FluentIcons.database_source),
+                label: const Text('Export Data'),
+              ),
+            ],
+          ),
         ),
       ),
       content: Padding(
@@ -37,6 +55,7 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
                   frozenPaneLineWidth: 1.5,
                 ),
                 child: SfDataGrid(
+                  key: controller.cocoaDataKey,
                   source: CocoaDataSource(
                       cocoaDistributionData: controller.cocoaDistributionList),
                   onCellTap: (details) {
@@ -73,10 +92,44 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
                   columnWidthMode: ColumnWidthMode.fill,
                   columnWidthCalculationRange:
                       ColumnWidthCalculationRange.allRows,
-                  onQueryRowHeight: (details) {
-                    return details.rowIndex == 0 ? 50.0 : 40.0;
-                  },
+                  // onQueryRowHeight: (details) {
+                  //   return details.rowIndex == 0 ? 50.0 : 40.0;
+                  // },
                   frozenColumnsCount: 1,
+                  tableSummaryRows: [
+                    GridTableSummaryRow(
+                      showSummaryInRow: false,
+                      color: Colors.grey.withOpacity(0.04),
+                      columns: [
+                        const GridSummaryColumn(
+                          name: 'farmer_id',
+                          columnName: 'farmer_id',
+                          summaryType: GridSummaryType.count,
+                        ),
+                        const GridSummaryColumn(
+                          name: 'kg_to_company',
+                          columnName: 'kg_to_company',
+                          summaryType: GridSummaryType.sum,
+                        ),
+                        const GridSummaryColumn(
+                          name: 'kg_to_client',
+                          columnName: 'kg_to_client',
+                          summaryType: GridSummaryType.sum,
+                        ),
+                        const GridSummaryColumn(
+                          name: 'total_kg',
+                          columnName: 'total_kg',
+                          summaryType: GridSummaryType.sum,
+                        ),
+                        const GridSummaryColumn(
+                          name: 'bags',
+                          columnName: 'bags',
+                          summaryType: GridSummaryType.sum,
+                        )
+                      ],
+                      position: GridTableSummaryRowPosition.bottom,
+                    )
+                  ],
                   columns: <GridColumn>[
                     GridColumn(
                         columnName: 'farmer_id',
@@ -115,12 +168,20 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
                               'KG TO CLIENT',
                             ))),
                     GridColumn(
+                        columnName: 'total_kg',
+                        label: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              'TOTAL KG',
+                            ))),
+                    GridColumn(
                         columnName: 'bags',
                         label: Container(
                             padding: const EdgeInsets.all(10.0),
                             alignment: Alignment.center,
                             child: const Text(
-                              'TOTAL BAGS',
+                              'BAGS',
                             ))),
                     GridColumn(
                         columnName: 'date_of_sale',

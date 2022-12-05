@@ -6,7 +6,7 @@ part 'schema.g.dart';
 class _Officer {
   @PrimaryKey()
   late ObjectId id;
-  late int officerId;
+  late String officerId;
   late String name;
   late String phone;
   late String email;
@@ -26,7 +26,7 @@ class _Officer {
 class _Client {
   @PrimaryKey()
   late ObjectId id;
-  late int clientId;
+  late String clientId;
   late String name;
   late String phone;
   late String gender;

@@ -1,8 +1,11 @@
+import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/components/common/desktop_app_button.dart';
 import 'package:bapways_integrated_system/components/officer/value_picker.dart';
 import 'package:bapways_integrated_system/controllers/officer_controller.dart';
+import 'package:bapways_integrated_system/utils/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../common/desktop_form_field.dart';
 
@@ -136,21 +139,28 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                 ],
               ),
               const SizedBox(height: 8),
-              DesktopFormField(
-                header: 'Date of Employment',
-                controller: controller.isEditing.isTrue
-                    ? TextEditingController.fromValue(
-                        TextEditingValue(
-                            text:
-                                controller.officerDataToEdit.dateOfEmployment),
-                      )
-                    : controller.dateOfEmploymentController,
-                validator: (value) {
-                  return controller.validate(value!, 'Date of Employment');
-                },
-                onSaved: (value) {
-                  controller.dateOfEmployment = value!;
-                },
+              Obx(
+                () => DesktopFormField(
+                  header: 'Date of Employment',
+                  hintText: DateFormat.yMMMEd()
+                      .format(controller.selectedDate.value)
+                      .toString(),
+                  widget: IconButton(
+                    icon: const Icon(FluentIcons.calendar),
+                    onPressed: () async {
+                      DateTime? pickerDate = await Helpers.getDate(context);
+
+                      if (pickerDate != null) {
+                        controller.selectedDate.value = pickerDate;
+                      } else {
+                        AppNotificationDesktop.error(
+                          context: context,
+                          message: 'No date was selected',
+                        );
+                      }
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 30),
               DesktopAppButton(

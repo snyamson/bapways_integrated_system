@@ -48,6 +48,9 @@ dependencies:
   elegant_notification: ^1.6.4
   multiple_result: ^1.0.4
   realm: ^0.5.0+beta
+  syncfusion_flutter_datagrid_export:
+  intl: ^0.17.0
+  syncfusion_flutter_datepicker: ^20.3.58
 
 dev_dependencies:
   flutter_test:
