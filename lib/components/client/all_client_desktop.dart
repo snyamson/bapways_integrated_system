@@ -45,24 +45,30 @@ class AllClientDesktop extends GetView<ClientController> {
                         context: context,
                         builder: (context) {
                           return OnRowTap(
-                              name: controller
-                                  .clientsList[
-                                      details.rowColumnIndex.rowIndex - 1]
-                                  .name,
-                              otherDetail:
-                                  'Phone Number: ${controller.clientsList[details.rowColumnIndex.rowIndex - 1].phone}',
-                              onEditPressed: () {
-                                controller.startEditing();
-                                controller.assignClientDataToEdit(
-                                  controller
-                                      .clientsList[
-                                          details.rowColumnIndex.rowIndex - 1]
-                                      .id
-                                      .toString(),
-                                );
-                                controller.onPageChange(1);
-                                Navigator.pop(context);
-                              });
+                            name: controller
+                                .clientsList[
+                                    details.rowColumnIndex.rowIndex - 1]
+                                .name,
+                            otherDetail:
+                                'Phone Number: ${controller.clientsList[details.rowColumnIndex.rowIndex - 1].phone}',
+                            onEditPressed: () {
+                              controller.startEditing();
+                              controller.assignClientDataToEdit(
+                                controller
+                                    .clientsList[
+                                        details.rowColumnIndex.rowIndex - 1]
+                                    .id
+                                    .toString(),
+                              );
+                              controller.onPageChange(1);
+                              Navigator.pop(context);
+                            },
+                            onDeletePressed: () {
+                              controller.deleteClient(controller.clientsList[
+                                  details.rowColumnIndex.rowIndex - 1]);
+                              Navigator.pop(context);
+                            },
+                          );
                         });
                   }
                 },
@@ -73,9 +79,6 @@ class AllClientDesktop extends GetView<ClientController> {
                 columnWidthMode: ColumnWidthMode.auto,
                 columnWidthCalculationRange:
                     ColumnWidthCalculationRange.allRows,
-                onQueryRowHeight: (details) {
-                  return details.rowIndex == 0 ? 50.0 : 40.0;
-                },
                 frozenColumnsCount: 1,
                 columns: <GridColumn>[
                   GridColumn(
@@ -131,12 +134,12 @@ class AllClientDesktop extends GetView<ClientController> {
                             'DISTRICT',
                           ))),
                   GridColumn(
-                      columnName: 'dateOfEmployment',
+                      columnName: 'date_of_registration',
                       label: Container(
                           padding: const EdgeInsets.all(10.0),
                           alignment: Alignment.center,
                           child: const Text(
-                            'DOE',
+                            'REGISTERED ON',
                             softWrap: false,
                           ))),
                   GridColumn(

@@ -12,13 +12,13 @@ class Officer extends _Officer with RealmEntity, RealmObject {
     String officerId,
     String name,
     String phone,
-    String email,
     String gender,
     String location,
     String levelOfEduc,
     String dateOfEmployment,
-    DateTime createdAt,
-  ) {
+    DateTime createdAt, {
+    String? email,
+  }) {
     RealmObject.set(this, 'id', id);
     RealmObject.set(this, 'officerId', officerId);
     RealmObject.set(this, 'name', name);
@@ -54,9 +54,9 @@ class Officer extends _Officer with RealmEntity, RealmObject {
   set phone(String value) => RealmObject.set(this, 'phone', value);
 
   @override
-  String get email => RealmObject.get<String>(this, 'email') as String;
+  String? get email => RealmObject.get<String>(this, 'email') as String?;
   @override
-  set email(String value) => RealmObject.set(this, 'email', value);
+  set email(String? value) => RealmObject.set(this, 'email', value);
 
   @override
   String get gender => RealmObject.get<String>(this, 'gender') as String;
@@ -103,7 +103,7 @@ class Officer extends _Officer with RealmEntity, RealmObject {
       SchemaProperty('officerId', RealmPropertyType.string),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('phone', RealmPropertyType.string),
-      SchemaProperty('email', RealmPropertyType.string),
+      SchemaProperty('email', RealmPropertyType.string, optional: true),
       SchemaProperty('gender', RealmPropertyType.string),
       SchemaProperty('location', RealmPropertyType.string),
       SchemaProperty('levelOfEduc', RealmPropertyType.string),
@@ -118,14 +118,14 @@ class Client extends _Client with RealmEntity, RealmObject {
     ObjectId id,
     String clientId,
     String name,
-    String phone,
     String gender,
     String cropType,
-    String farmSize,
     String location,
     String district,
     String dateOfRegistration,
     DateTime createdAt, {
+    String? phone,
+    String? farmSize,
     Officer? officer,
   }) {
     RealmObject.set(this, 'id', id);
@@ -160,9 +160,9 @@ class Client extends _Client with RealmEntity, RealmObject {
   set name(String value) => RealmObject.set(this, 'name', value);
 
   @override
-  String get phone => RealmObject.get<String>(this, 'phone') as String;
+  String? get phone => RealmObject.get<String>(this, 'phone') as String?;
   @override
-  set phone(String value) => RealmObject.set(this, 'phone', value);
+  set phone(String? value) => RealmObject.set(this, 'phone', value);
 
   @override
   String get gender => RealmObject.get<String>(this, 'gender') as String;
@@ -175,9 +175,9 @@ class Client extends _Client with RealmEntity, RealmObject {
   set cropType(String value) => RealmObject.set(this, 'cropType', value);
 
   @override
-  String get farmSize => RealmObject.get<String>(this, 'farmSize') as String;
+  String? get farmSize => RealmObject.get<String>(this, 'farmSize') as String?;
   @override
-  set farmSize(String value) => RealmObject.set(this, 'farmSize', value);
+  set farmSize(String? value) => RealmObject.set(this, 'farmSize', value);
 
   @override
   String get location => RealmObject.get<String>(this, 'location') as String;
@@ -223,10 +223,10 @@ class Client extends _Client with RealmEntity, RealmObject {
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('clientId', RealmPropertyType.string),
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('phone', RealmPropertyType.string),
+      SchemaProperty('phone', RealmPropertyType.string, optional: true),
       SchemaProperty('gender', RealmPropertyType.string),
       SchemaProperty('cropType', RealmPropertyType.string),
-      SchemaProperty('farmSize', RealmPropertyType.string),
+      SchemaProperty('farmSize', RealmPropertyType.string, optional: true),
       SchemaProperty('location', RealmPropertyType.string),
       SchemaProperty('district', RealmPropertyType.string),
       SchemaProperty('dateOfRegistration', RealmPropertyType.string),

@@ -47,24 +47,32 @@ class AllDataScreenDesktop extends GetView<OfficerController> {
                         context: context,
                         builder: (context) {
                           return OnRowTap(
-                              name: controller
-                                  .officersList[
-                                      details.rowColumnIndex.rowIndex - 1]
-                                  .name,
-                              otherDetail:
-                                  'Phone Number: ${controller.officersList[details.rowColumnIndex.rowIndex - 1].phone}',
-                              onEditPressed: () {
-                                controller.startEditing();
-                                controller.assignOfficerDataToEdit(
-                                  controller
-                                      .officersList[
-                                          details.rowColumnIndex.rowIndex - 1]
-                                      .id
-                                      .toString(),
-                                );
-                                controller.onPageChange(1);
-                                Navigator.pop(context);
-                              });
+                            name: controller
+                                .officersList[
+                                    details.rowColumnIndex.rowIndex - 1]
+                                .name,
+                            otherDetail:
+                                'Phone Number: ${controller.officersList[details.rowColumnIndex.rowIndex - 1].phone}',
+                            onEditPressed: () {
+                              controller.startEditing();
+                              controller.assignOfficerDataToEdit(
+                                controller
+                                    .officersList[
+                                        details.rowColumnIndex.rowIndex - 1]
+                                    .id
+                                    .toString(),
+                              );
+                              controller.onPageChange(1);
+                              Navigator.pop(context);
+                            },
+                            onDeletePressed: () {
+                              controller.deleteOfficerData(
+                                controller.officersList[
+                                    details.rowColumnIndex.rowIndex - 1],
+                              );
+                              Navigator.pop(context);
+                            },
+                          );
                         });
                   }
                 },

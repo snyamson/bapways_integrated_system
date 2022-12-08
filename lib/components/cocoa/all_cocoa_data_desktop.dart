@@ -64,24 +64,32 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
                           context: context,
                           builder: (context) {
                             return OnRowTap(
-                                name: controller
-                                    .cocoaDistributionList[
-                                        details.rowColumnIndex.rowIndex - 1]
-                                    .clientName,
-                                otherDetail:
-                                    'Farmer Id: ${controller.cocoaDistributionList[details.rowColumnIndex.rowIndex - 1].clientId}',
-                                onEditPressed: () {
-                                  controller.startEditing();
-                                  controller.assignCocoaDataToEdit(
-                                    controller
-                                        .cocoaDistributionList[
-                                            details.rowColumnIndex.rowIndex - 1]
-                                        .id
-                                        .toString(),
-                                  );
-                                  controller.onPageChange(1);
-                                  Navigator.pop(context);
-                                });
+                              name: controller
+                                  .cocoaDistributionList[
+                                      details.rowColumnIndex.rowIndex - 1]
+                                  .clientName,
+                              otherDetail:
+                                  'Farmer Id: ${controller.cocoaDistributionList[details.rowColumnIndex.rowIndex - 1].clientId}',
+                              onEditPressed: () {
+                                controller.startEditing();
+                                controller.assignCocoaDataToEdit(
+                                  controller
+                                      .cocoaDistributionList[
+                                          details.rowColumnIndex.rowIndex - 1]
+                                      .id
+                                      .toString(),
+                                );
+                                controller.onPageChange(1);
+                                Navigator.pop(context);
+                              },
+                              onDeletePressed: () {
+                                controller.deleteCocoaData(
+                                  controller.cocoaDistributionList[
+                                      details.rowColumnIndex.rowIndex - 1],
+                                );
+                                Navigator.pop(context);
+                              },
+                            );
                           });
                     }
                   },
@@ -92,9 +100,6 @@ class AllCocoaDataDesktop extends GetView<CocoaController> {
                   columnWidthMode: ColumnWidthMode.fill,
                   columnWidthCalculationRange:
                       ColumnWidthCalculationRange.allRows,
-                  // onQueryRowHeight: (details) {
-                  //   return details.rowIndex == 0 ? 50.0 : 40.0;
-                  // },
                   frozenColumnsCount: 1,
                   tableSummaryRows: [
                     GridTableSummaryRow(

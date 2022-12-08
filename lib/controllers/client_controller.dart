@@ -1,3 +1,4 @@
+import 'package:bapways_integrated_system/components/common/app_notification_desktop.dart';
 import 'package:bapways_integrated_system/controllers/officer_controller.dart';
 import 'package:bapways_integrated_system/db/db_helper.dart';
 import 'package:bapways_integrated_system/schema/schema.dart';
@@ -101,7 +102,7 @@ class ClientController extends GetxController {
   }
 
 //ADD NEW DATA TO THE DATABASE
-  Future<void> addClient() async {
+  Future<void> addClient(BuildContext context) async {
     if (addClientFormKey.currentState!.validate()) {
       addClientFormKey.currentState!.save();
 
@@ -115,18 +116,22 @@ class ClientController extends GetxController {
           ObjectId(),
           GenerateId.assignClientId((_clientsList.length) + 1),
           name,
-          phone,
           genderValue.toString(),
           cropTypeValue.toString(),
-          farmSize,
           location,
           district,
           DateFormat.yMMMEd().format(selectedDate.value).toString(),
           DateTime.now(),
+          phone: phone,
+          farmSize: farmSize,
           officer: registeredByOfficer,
         );
 
         DbHelper.insertClientData(clientData: client);
+        AppNotificationDesktop.success(
+          context: context,
+          message: '$name created successfully',
+        );
         _doneAndRefresh();
       } catch (e) {
         debugPrint(e.toString());
@@ -153,14 +158,14 @@ class ClientController extends GetxController {
           dataToEdit.id,
           dataToEdit.clientId,
           name,
-          phone,
           genderValue.toString(),
           cropTypeValue.toString(),
-          farmSize,
           location,
           district,
           DateFormat.yMMMEd().format(selectedDate.value).toString(),
           dataToEdit.createdAt,
+          phone: phone,
+          farmSize: farmSize,
           officer: registeredByOfficer,
         );
 
@@ -169,6 +174,16 @@ class ClientController extends GetxController {
       } catch (e) {
         debugPrint(e.toString());
       }
+    }
+  }
+
+  //DELETE DATA IN THE DATABASE
+  Future<void> deleteClient(Client client) async {
+    try {
+      DbHelper.deleteClientData(clientData: client);
+      getAllClientData();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 

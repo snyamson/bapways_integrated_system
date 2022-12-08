@@ -9,7 +9,7 @@ class _Officer {
   late String officerId;
   late String name;
   late String phone;
-  late String email;
+  late String? email;
   late String gender;
   late String location;
   late String levelOfEduc;
@@ -28,10 +28,10 @@ class _Client {
   late ObjectId id;
   late String clientId;
   late String name;
-  late String phone;
+  late String? phone;
   late String gender;
   late String cropType;
-  late String farmSize;
+  late String? farmSize;
   late String location;
   late String district;
   late String dateOfRegistration;

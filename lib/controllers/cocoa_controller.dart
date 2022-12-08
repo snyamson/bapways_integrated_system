@@ -147,10 +147,11 @@ class CocoaController extends GetxController {
     }
   }
 
-// DELETE ALL DATA
-  Future<void> deleteAllCocoaData() async {
+// DELETE DATA
+  Future<void> deleteCocoaData(CocoaDistribution cocoaData) async {
     try {
-      await DbHelper.deleteAll();
+      await DbHelper.deleteCocoaData(cocoaData: cocoaData);
+      getAllCocoaData();
     } catch (e) {
       debugPrint(e.toString());
     }

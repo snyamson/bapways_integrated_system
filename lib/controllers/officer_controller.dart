@@ -119,12 +119,12 @@ class OfficerController extends GetxController with StateMixin<List> {
           GenerateId.assignOfficerId((_officersList.length) + 1),
           name,
           phone,
-          email,
           genderValue.toString(),
           location,
           eduCertValue.toString(),
           DateFormat.yMMMEd().format(selectedDate.value).toString(),
           DateTime.now(),
+          email: email,
         );
 
         DbHelper.insertOfficerData(officerData: officer);
@@ -151,12 +151,12 @@ class OfficerController extends GetxController with StateMixin<List> {
           dataToEdit.officerId,
           name,
           phone,
-          email,
           genderValue.toString(),
           location,
           eduCertValue.toString(),
           DateFormat.yMMMEd().format(selectedDate.value).toString(),
           dataToEdit.createdAt,
+          email: email,
         );
 
         DbHelper.updateOfficerData(officerData: officer);
@@ -164,6 +164,15 @@ class OfficerController extends GetxController with StateMixin<List> {
       } catch (e) {
         debugPrint(e.toString());
       }
+    }
+  }
+
+  Future<void> deleteOfficerData(Officer officer) async {
+    try {
+      await DbHelper.deleteOfficerData(officerData: officer);
+      getAllOfficerData();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 

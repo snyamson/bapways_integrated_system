@@ -59,7 +59,9 @@ class AddOfficerDesktop extends GetView<OfficerController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                      text: controller.officerDataToEdit.email),
+                                      text:
+                                          controller.officerDataToEdit.email ??
+                                              ''),
                                 )
                               : controller.emailController,
                           validator: (value) {

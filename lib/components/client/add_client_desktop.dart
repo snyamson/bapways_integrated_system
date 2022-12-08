@@ -89,7 +89,9 @@ class AddClientDesktop extends GetView<ClientController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.clientDataToEdit.farmSize,
+                                    text:
+                                        controller.clientDataToEdit.farmSize ??
+                                            '',
                                   ),
                                 )
                               : controller.farmSizeController,
@@ -112,7 +114,8 @@ class AddClientDesktop extends GetView<ClientController> {
                           controller: controller.isEditing.isTrue
                               ? TextEditingController.fromValue(
                                   TextEditingValue(
-                                    text: controller.clientDataToEdit.phone,
+                                    text:
+                                        controller.clientDataToEdit.phone ?? '',
                                   ),
                                 )
                               : controller.phoneController,
@@ -217,7 +220,7 @@ class AddClientDesktop extends GetView<ClientController> {
                     controller.updateClientData();
                     controller.onPageChange(0);
                   } else {
-                    controller.addClient();
+                    controller.addClient(context);
                   }
                 },
               )

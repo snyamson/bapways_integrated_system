@@ -45,8 +45,9 @@ class DbHelper {
     );
   }
 
-  static Future<void> deleteAll() async {
-    return db?.write(() => db?.deleteAll<CocoaDistribution>());
+  static Future<void> deleteCocoaData(
+      {required CocoaDistribution cocoaData}) async {
+    return db?.write(() => db?.delete<CocoaDistribution>(cocoaData));
   }
 
   // OFFICER HELPERS
@@ -64,8 +65,8 @@ class DbHelper {
     );
   }
 
-  static Future<void> deleteAllOfficerData() async {
-    return db?.write(() => db?.deleteAll<Officer>());
+  static Future<void> deleteOfficerData({required Officer officerData}) async {
+    return db?.write(() => db?.delete<Officer>(officerData));
   }
 
   // CLIENT HELPERS
@@ -83,8 +84,8 @@ class DbHelper {
     );
   }
 
-  static Future<void> deleteAllClientData() async {
-    return db?.write(() => db?.deleteAll<Client>());
+  static Future<void> deleteClientData({required Client clientData}) async {
+    return db?.write(() => db?.delete<Client>(clientData));
   }
 
 // USER HELPERS
